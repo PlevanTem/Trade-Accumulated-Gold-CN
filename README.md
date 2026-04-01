@@ -111,14 +111,14 @@
 
 ```bash
 # 克隆到 Cursor 全局 Skills 目录
-git clone https://github.com/yourusername/gold-accumulation-trading \
+git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ~/.cursor/skills/gold-accumulation-trading
 ```
 
 **方式二：克隆到项目目录**
 
 ```bash
-git clone https://github.com/yourusername/gold-accumulation-trading
+git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git
 ```
 
 ### 使用
