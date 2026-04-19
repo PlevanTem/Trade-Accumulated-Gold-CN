@@ -2,7 +2,7 @@
 
 # ⚡ Gold Accumulation Trading AI · 黄金积存金短线交易 AI
 
-**让 AI 帮你盯盘 · 实时分析 · 精准点位 · 一键生成交易策略**
+**一句话触发分析 · 聚合实时行情与情绪 · 精准换算国内积存金点位 · 辅助短线交易决策**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Data](https://img.shields.io/badge/Data-实时%20Investing.com-green)](https://www.investing.com/currencies/xau-usd)
