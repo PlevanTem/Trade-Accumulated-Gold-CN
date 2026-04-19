@@ -48,8 +48,18 @@
 
 ## 📸 效果展示
 
+完整示例报告见 [assets/2026-04-19-1759-gold-analysis.md](assets/2026-04-19-1759-gold-analysis.md)。
+
+报告结构对应 SKILL 阶段4 的强制落盘要求，包含：
+- 顶部速览：**综合倾向（AxisM/L/S 三轴）** + **执行门控（30m/1H）** 两行核心结论
+- 金友圈社区共识：3-8 条要点提炼 + 抓取时间戳 + content_id 溯源
+- 完整点位表：XAUUSD 与浙商/民生积存金元/克双栏展示
+- R:R 风险收益比验证 + 入场/止损/止盈三件套
+- 数据来源：每条数据 Markdown 可点击 URL，抓取失败如实标注降级
+
 <details>
-<summary>📄 点击展开完整报告示例</summary>
+
+<summary>📄 点击展开报告分析示例</summary>
 
 ```
 ⚡ 黄金积存金实时短线分析
@@ -236,6 +246,8 @@ python "./scripts/fetch_jd_personal_latest_post.py"
 
 ## 🔧 工作原理
 
+![workflow](Trade-Accumulated-Gold-CN.png)
+
 ```
 用户触发
    │
@@ -335,19 +347,6 @@ Trade-Accumulated-Gold-CN/
 
 ---
 
-## 📖 示例报告
-
-完整示例报告见 [assets/2026-04-19-1759-gold-analysis.md](assets/2026-04-19-1759-gold-analysis.md)。
-
-报告结构对应 SKILL 阶段4 的强制落盘要求，包含：
-- 顶部速览：**综合倾向（AxisM/L/S 三轴）** + **执行门控（30m/1H）** 两行核心结论
-- 金友圈社区共识：3-8 条要点提炼 + 抓取时间戳 + content_id 溯源
-- 完整点位表：XAUUSD 与浙商/民生积存金元/克双栏展示
-- R:R 风险收益比验证 + 入场/止损/止盈三件套
-- 数据来源：每条数据 Markdown 可点击 URL，抓取失败如实标注降级
-
----
-
 ## 🛠️ 配置指南
 
 ### 自定义银行（默认：浙商 + 民生）
@@ -423,5 +422,7 @@ MIT License — 自由使用、修改、分发，保留原始版权声明即可�
 **如果这个工具对你有帮助，请给一个 ⭐ Star！**
 
 你的 Star 是持续更新和优化的最大动力 🙏
+
+![wxpay](WEIXIN-PAY.jpg)
 
 </div>
