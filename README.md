@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Data](https://img.shields.io/badge/Data-实时%20Investing.com-green)](https://www.investing.com/currencies/xau-usd)
-[![Stars](https://img.shields.io/github/stars/yourusername/gold-accumulation-trading?style=social)](.)
+[![Stars](https://img.shields.io/github/stars/PlevanTem/Trade-Accumulated-Gold-CN?style=social)](https://github.com/PlevanTem/Trade-Accumulated-Gold-CN)
 
 [快速开始](#-快速开始) · [工作原理](#-工作原理) · [配置指南](#-配置指南) · [示例报告](#-效果展示)
 
@@ -406,6 +406,6 @@ MIT License — 自由使用、修改、分发，保留原始版权声明即可�
 
 你的 Star 是持续更新和优化的最大动力 🙏
 
-![wxpay](WEIXIN-PAY.jpg)
+<img src="WEIXIN-PAY.jpg" alt="wxpay" width="260" />
 
 </div>
