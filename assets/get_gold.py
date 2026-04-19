@@ -1,0 +1,1 @@
+import urllib.request, json; u = 'https://api.coingecko.com/api/v3/simple/price?ids=tether-gold&vs_currencies=usd'; req = urllib.request.Request(u, headers={'User-Agent': 'Mozilla/5.0'}); print(json.loads(urllib.request.urlopen(req).read().decode())['tether-gold']['usd']);
