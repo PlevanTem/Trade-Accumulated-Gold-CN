@@ -8,7 +8,7 @@
 [![Data](https://img.shields.io/badge/Data-实时%20Investing.com-green)](https://www.investing.com/currencies/xau-usd)
 [![Stars](https://img.shields.io/github/stars/yourusername/gold-accumulation-trading?style=social)](.)
 
-[功能演示](#-效果展示) · [快速开始](#-快速开始) · [工作原理](#-工作原理) · [配置指南](#-配置指南) · [示例报告](#-示例报告)
+[快速开始](#-快速开始) · [工作原理](#-工作原理) · [配置指南](#-配置指南) · [示例报告](#-效果展示)
 
 <br>
 
@@ -47,15 +47,6 @@
 ---
 
 ## 📸 效果展示
-
-完整示例报告见 [assets/2026-04-19-1759-gold-analysis.md](assets/2026-04-19-1759-gold-analysis.md)。
-
-报告结构对应 SKILL 阶段4 的强制落盘要求，包含：
-- 顶部速览：**综合倾向（AxisM/L/S 三轴）** + **执行门控（30m/1H）** 两行核心结论
-- 金友圈社区共识：3-8 条要点提炼 + 抓取时间戳 + content_id 溯源
-- 完整点位表：XAUUSD 与浙商/民生积存金元/克双栏展示
-- R:R 风险收益比验证 + 入场/止损/止盈三件套
-- 数据来源：每条数据 Markdown 可点击 URL，抓取失败如实标注降级
 
 <details>
 
@@ -103,6 +94,16 @@
 ```
 
 </details>
+
+
+完整示例报告见 [assets/2026-04-19-1759-gold-analysis.md](assets/2026-04-19-1759-gold-analysis.md)。
+
+报告结构对应 SKILL 阶段4 的强制落盘要求，包含：
+- 顶部速览：**综合倾向（AxisM/L/S 三轴）** + **执行门控（30m/1H）** 两行核心结论
+- 金友圈社区共识：3-8 条要点提炼 + 抓取时间戳 + content_id 溯源
+- 完整点位表：XAUUSD 与浙商/民生积存金元/克双栏展示
+- R:R 风险收益比验证 + 入场/止损/止盈三件套
+- 数据来源：每条数据 Markdown 可点击 URL，抓取失败如实标注降级
 
 ---
 
