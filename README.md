@@ -409,4 +409,6 @@ MIT License — 自由使用、修改、分发，保留原始版权声明即可�
 
 你的 Star 是持续更新和优化的最大动力 🙏
 
+[![Star History Chart](https://star-history.com)](https://star-history.com)
+
 </div>
