@@ -409,6 +409,12 @@ MIT License — 自由使用、修改、分发，保留原始版权声明即可�
 
 你的 Star 是持续更新和优化的最大动力 🙏
 
-[![Star History Chart](https://star-history.com)](https://star-history.com)
+<a href="https://www.star-history.com/?repos=PlevanTem%2FTrade-Accumulated-Gold-CN&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left" />
+ </picture>
+</a>
 
 </div>
