@@ -49,8 +49,14 @@ DEFAULT_URL = (
     "contentId=jimu_user_info-12066789&romaFileName=pageCommunityPersonal"
 )
 
-# 个人主页：feed 列表中第一条 post 的标题 span
+# 个人主页：feed 列表中第一条 post 的旧标题选择器（页面改版后可能失效）
 FEED_TITLE_SELECTOR = "div.jue-lego-feed-container span.content-title-text"
+
+# 个人主页：更稳的候选节点选择器。优先依赖埋点属性，而不是脆弱的 class 名。
+FEED_FALLBACK_SELECTORS = [
+    '[data-qidian-ext]',
+    '[data-id]',
+]
 
 # 详情页：顶部精确时间元素（data-jue-name 唯一标识）
 # 典型文本："2026-04-19 13:04 山东"
@@ -98,6 +104,134 @@ def _parse_qidian_ext(raw: Optional[str]) -> Optional[Dict[str, Any]]:
         return None
 
 
+def _normalize_text(text: Optional[str]) -> str:
+    return re.sub(r"\s+", " ", text or "").strip()
+
+
+def _score_post_candidate(
+    text: str,
+    *,
+    qidian_ext: Optional[Dict[str, Any]],
+    qidian_raw: Optional[str],
+) -> int:
+    score = 0
+    lower_text = text.lower()
+    raw = qidian_raw or ""
+    content_type = str((qidian_ext or {}).get("contentType", ""))
+
+    if raw:
+        score += 4
+    if qidian_ext and qidian_ext.get("contentId"):
+        score += 6
+    if "动态" in content_type:
+        score += 3
+    if "金友圈" in text:
+        score += 3
+    if "观点精选" in text or "资讯总分析" in text or "资讯汇总分析" in text:
+        score += 5
+    if "评论" in text:
+        score += 1
+    if re.search(r"\d+分钟前|\d+小时前|昨天", text):
+        score += 1
+    if len(text) >= 20:
+        score += 1
+
+    # 过滤明显不是帖子正文的头部资料区/空白占位
+    if "黄金持仓" in text or "关注并查看明细" in text:
+        score -= 5
+    if text in {"动态", "文章", "视频", "暂无相关内容"}:
+        score -= 6
+    if "个人主页" in lower_text:
+        score -= 3
+
+    return score
+
+
+def _goto_with_retries(page, url: str, *, navigation_timeout_ms: int, attempts: int = 3) -> None:
+    last_exc: Optional[Exception] = None
+    for attempt_idx in range(attempts):
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=navigation_timeout_ms)
+            return
+        except Exception as exc:
+            last_exc = exc
+            if attempt_idx == attempts - 1:
+                raise
+            page.wait_for_timeout(1500 * (attempt_idx + 1))
+    if last_exc is not None:
+        raise last_exc
+
+
+def _find_latest_post_locator(
+    page,
+    *,
+    legacy_selector: str,
+    element_timeout_ms: int,
+) -> tuple[Any, str, Optional[str], Optional[Dict[str, Any]], Optional[str]]:
+    """
+    返回 (locator, title_text, data_id, qidian_ext, clstag)。
+
+    先尝试旧选择器；失败后回退到埋点属性扫描，避免页面改版时完全失效。
+    """
+    try:
+        legacy_locator = page.locator(legacy_selector).first
+        legacy_locator.wait_for(state="visible", timeout=3_000)
+        title_text = _normalize_text(legacy_locator.inner_text(timeout=3_000))
+        qidian_raw = legacy_locator.get_attribute("data-qidian-ext")
+        return (
+            legacy_locator,
+            title_text,
+            legacy_locator.get_attribute("data-id"),
+            _parse_qidian_ext(qidian_raw),
+            legacy_locator.get_attribute("clstag"),
+        )
+    except Exception:
+        pass
+
+    best_candidate: Optional[tuple[Any, str, Optional[str], Optional[Dict[str, Any]], Optional[str], int]] = None
+
+    for selector in FEED_FALLBACK_SELECTORS:
+        locator = page.locator(selector)
+        try:
+            count = min(locator.count(), 80)
+        except Exception:
+            continue
+
+        for idx in range(count):
+            candidate = locator.nth(idx)
+            try:
+                if not candidate.is_visible(timeout=800):
+                    continue
+                text = _normalize_text(candidate.inner_text(timeout=1_500))
+                if not text:
+                    continue
+                qidian_raw = candidate.get_attribute("data-qidian-ext")
+                qidian_ext = _parse_qidian_ext(qidian_raw)
+                score = _score_post_candidate(text, qidian_ext=qidian_ext, qidian_raw=qidian_raw)
+                if score <= 0:
+                    continue
+                normalized = (
+                    candidate,
+                    text,
+                    candidate.get_attribute("data-id"),
+                    qidian_ext,
+                    candidate.get_attribute("clstag"),
+                    score,
+                )
+                if best_candidate is None or score > best_candidate[5]:
+                    best_candidate = normalized
+            except Exception:
+                continue
+
+    if best_candidate is None:
+        raise PlaywrightTimeoutError(
+            "未能定位最新动态节点：旧选择器失效，且在埋点属性扫描中未找到可见帖子候选。"
+        )
+
+    locator, text, data_id, qidian_ext, clstag, _score = best_candidate
+    return locator, text, data_id, qidian_ext, clstag
+
+
 def launch_browser(playwright_obj, *, headless: bool):
     browser_path = os.getenv("PLAYWRIGHT_BROWSER_PATH")
     if browser_path:
@@ -141,7 +275,10 @@ def _fetch_detail_published_time(
         time_locator = page.locator(detail_time_selector).first
         time_locator.wait_for(state="visible", timeout=element_timeout_ms)
         raw = time_locator.inner_text(timeout=element_timeout_ms).strip()
-        return _parse_published_time(raw), raw
+        published_at = _parse_published_time(raw)
+        if published_at is None:
+            return None, None
+        return published_at, raw
     except Exception:
         # 详情页时间抓取失败不阻断主流程，静默降级
         return None, None
@@ -188,7 +325,7 @@ def fetch_latest_post(
                 context_kwargs["storage_state"] = storage_state_path
             context = browser.new_context(**context_kwargs)
             page = context.new_page()
-            page.goto(url, wait_until="domcontentloaded", timeout=navigation_timeout_ms)
+            _goto_with_retries(page, url, navigation_timeout_ms=navigation_timeout_ms)
 
             if looks_like_login_wall(page.title(), page.url):
                 browser.close()
@@ -202,15 +339,15 @@ def fetch_latest_post(
             if extra_wait_ms > 0:
                 page.wait_for_timeout(extra_wait_ms)
 
-            # ── 步骤1：读取 feed 列表中第一条 post 的标题信息 ──────────────────
-            locator = page.locator(title_selector).first
-            locator.wait_for(state="visible", timeout=element_timeout_ms)
+            # 页面已进入个人主页，但 feed 区内容是异步挂载的，先等关键区域出现。
+            page.locator("text=动态").first.wait_for(state="visible", timeout=element_timeout_ms)
 
-            title_text = locator.inner_text(timeout=element_timeout_ms).strip()
-            data_id = locator.get_attribute("data-id")
-            clstag = locator.get_attribute("clstag")
-            qidian_raw = locator.get_attribute("data-qidian-ext")
-            qidian_ext = _parse_qidian_ext(qidian_raw)
+            # ── 步骤1：读取 feed 列表中第一条 post 的标题信息 ──────────────────
+            locator, title_text, data_id, qidian_ext, clstag = _find_latest_post_locator(
+                page,
+                legacy_selector=title_selector,
+                element_timeout_ms=element_timeout_ms,
+            )
 
             content_id: Optional[str] = None
             content_type: Optional[str] = None
