@@ -165,7 +165,7 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ~/.claude/skills/Trade-Accumulated-Gold-CN
 ```
 
-本仓库的技能入口为 **`~/.claude/skills/Trade-Accumulated-Gold-CN/.claude/skills/gold-analysis/SKILL.md`**（仓库根下没有 `SKILL.md`）。若你使用的 Claude Code 版本只会扫描安装目录**第一层**的 `SKILL.md`，请将 **`.claude/skills/gold-analysis`** 按所用版本要求登记为技能目录（或查阅是否已支持递归扫描）。
+本仓库的技能入口为 **`~/.claude/skills/Trade-Accumulated-Gold-CN/.claude/skills/gold-analysis/SKILL.md`**（克隆后的**仓库根**下没有 `SKILL.md`，入口在上面的嵌套目录里）。若工具只认「每个技能文件夹根上就有一个 `SKILL.md`」这一种布局，可将本仓库里的 **`gold-analysis` 整个目录**单独复制/符号链接到 `~/.claude/skills/gold-analysis`（或与官方文档一致的任意技能目录名），使 **`~/.claude/skills/gold-analysis/SKILL.md`** 成立；其余 `scripts/`、`references/` 随之同级即可。也可查阅当前 Claude Code 版本是否支持递归发现子目录中的 `SKILL.md`。
 
 启动 `claude` 后，在已正确识别技能路径的前提下，无需 `@` 也可能在你提问「帮我分析积存金现在能不能买」时被自动选中调用。如需强制触发可显式说：
 
@@ -192,6 +192,8 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ~/.openclaw/skills/Trade-Accumulated-Gold-CN
 ```
 
+技能文件实际位于 **`…/Trade-Accumulated-Gold-CN/.claude/skills/gold-analysis/`**（与方式 B 相同嵌套结构）。若 OpenClaw 只扫描克隆目录第一层，请将该 **`gold-analysis`** 文件夹按工具说明单独登记，或复制/链接到其期望的技能根目录。
+
 ClawHub 启动后会在「Skills」面板看到本技能，点击或在对话中提及即可调用。
 
 </details>
@@ -202,17 +204,20 @@ ClawHub 启动后会在「Skills」面板看到本技能，点击或在对话中
 Gemini CLI 在 v0.x 起原生支持 Anthropic Skills 规范，目录约定为 `~/.gemini/skills/`（用户级）或 `./.gemini/skills/`（工作区级），并提供专门的 `gemini skills install` 命令。
 
 ```bash
-# 方式 1：用官方命令（推荐）
-gemini skills install https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git
-# 工作区作用域：
-gemini skills install https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git --scope workspace
+# 方式 1：用官方命令（推荐）。本仓库 SKILL 不在 Git 根目录，必须指定 --path：
+gemini skills install https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
+  --path .claude/skills/gold-analysis
+# 仅当前项目：
+gemini skills install https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
+  --scope workspace --path .claude/skills/gold-analysis
 
-# 方式 2：手动 git clone
-git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
-  ~/.gemini/skills/Trade-Accumulated-Gold-CN
+# 方式 2：手动 git clone 全仓库后，在 Gemini 侧用 link 指向技能目录（示例）：
+# git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
+#   ~/.gemini/skills/Trade-Accumulated-Gold-CN
+# gemini skills link ~/.gemini/skills/Trade-Accumulated-Gold-CN/.claude/skills/gold-analysis
 ```
 
-之后在 Gemini CLI 会话中正常提问，模型会根据 **`.claude/skills/gold-analysis/SKILL.md`** 头部 `description` 自动决定是否调用（具体以你安装后的实际路径为准）。
+安装完成后，在会话里用 **`/skills list`** 确认已发现该技能；模型会根据 **`SKILL.md` 头部 `description` 自动决定是否调用**（安装后的磁盘路径以 `gemini skills list` 显示为准）。
 
 </details>
 
