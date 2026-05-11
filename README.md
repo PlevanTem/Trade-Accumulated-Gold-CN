@@ -43,7 +43,7 @@
 | 💱 **积存金精准换算** | XAUUSD → 元/克，三级换算策略（银行实时报价 > SGE > 理论汇率），自动标注溢价并做溢出拦截 |
 | 📊 **R:R 风险收益比** | 每笔交易强制计算止损/止盈，R:R ≥ 1.5:1 才推荐入场 |
 | 🚨 **经济日历整合** | 自动读取当日已发布数据（ISM、非农、CPI 等），分析对金价的短期影响 |
-| 📁 **报告自动归档** | 每次分析自动落盘 `assets/YYYY-MM-DD-HHmm-gold-analysis.md`，便于复盘回测 |
+| 📁 **报告自动归档** | 每次分析自动落盘 `.claude/skills/assets/YYYY-MM-DD-HHmm-gold-analysis.md`，便于复盘回测 |
 
 ---
 
@@ -97,7 +97,7 @@
 </details>
 
 
-完整示例报告见 [assets/2026-04-19-1759-gold-analysis.md](assets/2026-04-19-1759-gold-analysis.md)。
+完整示例报告见 [.claude/skills/assets/2026-04-19-1759-gold-analysis.md](.claude/skills/assets/2026-04-19-1759-gold-analysis.md)。
 
 报告结构对应 SKILL 阶段4 的强制落盘要求，包含：
 - 顶部速览：**综合倾向（AxisM/L/S 三轴）** + **执行门控（30m/1H）** 两行核心结论
@@ -112,7 +112,7 @@
 
 ### 通用前置依赖
 
-- **Python 3.9+**：用于运行 `scripts/` 下的实时行情/银行报价/金友圈抓取脚本
+- **Python 3.9+**：用于运行 `.claude/skills/scripts/` 下的实时行情/银行报价/金友圈抓取脚本
 - **Playwright + Chromium**（可选，但强烈推荐）：京东金融银行积存金页面与金友圈帖子需要它
 
 ```bash
@@ -126,7 +126,7 @@ playwright install chromium
 
 ### 安装：四种 Agent 工具适配
 
-仓库结构遵循 [Anthropic Skills 规范](https://docs.claude.com/en/docs/claude-code/skills)（`SKILL.md` + `references/` + `scripts/` + `assets/`），主流 Agent 工具均可直接识别。请按你使用的 Agent 选择对应安装方式。
+本仓库将符合 [Anthropic Skills 规范](https://docs.claude.com/en/docs/claude-code/skills) 的技能包放在 **`.claude/skills/`**（内含 `SKILL.md`、`references/`、`scripts/`、`assets/`）。克隆到 Agent 的 skills 目录后，请用下文的完整相对路径触发。请按你使用的 Agent 选择对应安装方式。
 
 <details>
 <summary><b>方式 A：Cursor IDE</b></summary>
@@ -143,12 +143,14 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ./.agents/skills/Trade-Accumulated-Gold-CN
 ```
 
-在 Cursor Chat 内 `@` 触发：
+在 Cursor Chat 内 `@` 触发（技能入口在子目录 `.claude/skills/`）：
 
 ```
-@Trade-Accumulated-Gold-CN/SKILL.md 当前积存金点位分析
-@Trade-Accumulated-Gold-CN/SKILL.md 现在能买吗？
+@Trade-Accumulated-Gold-CN/.claude/skills/SKILL.md 当前积存金点位分析
+@Trade-Accumulated-Gold-CN/.claude/skills/SKILL.md 现在能买吗？
 ```
+
+若你直接把本仓库当作打开的工作区根目录，也可用相对路径：`@.claude/skills/SKILL.md`。
 
 </details>
 
@@ -163,7 +165,9 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ~/.claude/skills/Trade-Accumulated-Gold-CN
 ```
 
-启动 `claude` 后会自动扫描该目录下的 `SKILL.md`，无需 `@` 也能在你提问「帮我分析积存金现在能不能买」时被自动选中调用。如需强制触发可显式说：
+本仓库的技能入口为 **`~/.claude/skills/Trade-Accumulated-Gold-CN/.claude/skills/SKILL.md`**（仓库根下没有 `SKILL.md`）。若你使用的 Claude Code 版本只会扫描安装目录**第一层**的 `SKILL.md`，请将该 inner `.claude/skills` 目录单独注册为技能，或查阅官方文档是否已支持子目录扫描。
+
+启动 `claude` 后，在已正确识别技能路径的前提下，无需 `@` 也可能在你提问「帮我分析积存金现在能不能买」时被自动选中调用。如需强制触发可显式说：
 
 ```
 请使用 Trade-Accumulated-Gold-CN 这个 skill 帮我分析当前金价
@@ -208,7 +212,7 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
   ~/.gemini/skills/Trade-Accumulated-Gold-CN
 ```
 
-之后在 Gemini CLI 会话中正常提问，模型会根据 `SKILL.md` 头部 `description` 自动决定是否调用。
+之后在 Gemini CLI 会话中正常提问，模型会根据 **`.claude/skills/SKILL.md`** 头部 `description` 自动决定是否调用（具体以你安装后的实际路径为准）。
 
 </details>
 
@@ -234,15 +238,15 @@ git clone https://github.com/PlevanTem/Trade-Accumulated-Gold-CN.git \
 
 ```bash
 # 浙商 / 民生积存金报价（Playwright 优先，失败自动 fallback 到 JD API）
-python "./scripts/fetch_bank_quotes.py"
+python "./.claude/skills/scripts/fetch_bank_quotes.py"
 
 # 京东金融金友圈 [@黄金小小彬] 最新一条观点
-python "./scripts/fetch_jd_personal_latest_post.py"
+python "./.claude/skills/scripts/fetch_jd_personal_latest_post.py"
 ```
 
 两者都输出**人类可读摘要 + 完整 JSON**，方便接入下游分析。
 
-**没有 Playwright 又想读银行页面？** 在 Cursor 里可以让 Agent 走 `cursor-ide-browser` MCP（`browser_navigate` → `browser_lock` → `browser_snapshot` → `browser_unlock`）；其他 Agent 则会按 SKILL.md 阶段 2 的降级流程自动切换到搜索/SGE/理论换算兜底，并在报告中明确标注数据来源等级。
+**没有 Playwright 又想读银行页面？** 在 Cursor 里可以让 Agent 走 `cursor-ide-browser` MCP（`browser_navigate` → `browser_lock` → `browser_snapshot` → `browser_unlock`）；其他 Agent 则会按 `.claude/skills/SKILL.md` 阶段 2 的降级流程自动切换到搜索/SGE/理论换算兜底，并在报告中明确标注数据来源等级。
 
 ---
 
@@ -286,7 +290,7 @@ python "./scripts/fetch_jd_personal_latest_post.py"
 │  ├── 顶部两行：综合倾向(三轴) + 执行门控(30m/1H)        │
 │  ├── 完整点位表：XAUUSD + 积存金元/克 双栏展示           │
 │  ├── 数据来源：URL 链接 + 抓取时间，全程可追溯           │
-│  └── 落盘 assets/YYYY-MM-DD-HHmm-gold-analysis.md       │
+│  └── 落盘 .claude/skills/assets/YYYY-MM-DD-HHmm-gold-analysis.md │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -331,20 +335,23 @@ python "./scripts/fetch_jd_personal_latest_post.py"
 
 ```
 Trade-Accumulated-Gold-CN/
-├── SKILL.md                                # AI Agent 核心指令（入口，遵循 Anthropic Skills 规范）
 ├── README.md                               # 本文档
-├── .gitignore                              # 仅保留最新一份 assets 报告作为示例
-├── assets/
-│   └── 2026-04-19-1759-gold-analysis.md    # 示例输出报告（最新一份）
-├── references/
-│   ├── technical-analysis.md               # 技术分析指标详解（MA/BOLL/MACD/KDJ/RSI）
-│   ├── accumulation-gold.md                # 积存金产品知识与换算规则详解
-│   └── report-template.md                  # 标准报告输出模板（含金友圈结构化呈现格式）
-└── scripts/
-    ├── fetch_bank_quotes.py                # 浙商/民生银行积存金报价（Playwright + JD API 兜底）
-    ├── fetch_jd_personal_latest_post.py    # 京东金融金友圈[黄金小小彬]最新观点抓取
-    ├── live_market_data.py                 # XAUUSD 实时价 + USD/CNY 汇率
-    └── ...                                 # 其余 test_*.py 为各数据源探活脚本
+├── Trade-Accumulated-Gold-CN.png          # 工作流程示意图（见「工作原理」）
+├── .gitignore                              # 仅保留一份示例报告纳入版本库（见下）
+└── .claude/
+    └── skills/                             # Anthropic Skills 规范技能包（脚本与 references 均在此）
+        ├── SKILL.md                        # AI Agent 核心指令（入口）
+        ├── assets/
+        │   └── 2026-04-19-1759-gold-analysis.md   # 示例输出报告（仓库跟踪的这一份）
+        ├── references/
+        │   ├── technical-analysis.md       # 技术分析指标详解（MA/BOLL/MACD/KDJ/RSI）
+        │   ├── accumulation-gold.md      # 积存金产品知识与换算规则详解
+        │   └── report-template.md        # 标准报告输出模板（含金友圈结构化呈现格式）
+        └── scripts/
+            ├── fetch_bank_quotes.py        # 浙商/民生银行积存金报价（Playwright + JD API 兜底）
+            ├── fetch_jd_personal_latest_post.py  # 京东金融金友圈[黄金小小彬]最新观点抓取
+            ├── live_market_data.py         # XAUUSD 实时价 + USD/CNY 汇率
+            └── ...                       # 其余 test_*.py 为各数据源探活脚本
 ```
 
 ---
@@ -353,7 +360,7 @@ Trade-Accumulated-Gold-CN/
 
 ### 自定义银行（默认：浙商 + 民生）
 
-编辑 `SKILL.md` 中的 `搜索B` 部分，替换为你使用的银行积存金产品名称：
+编辑 `.claude/skills/SKILL.md` 中的 `搜索B` 部分，替换为你使用的银行积存金产品名称：
 
 ```
 优先搜索: "工商银行积存金 建设银行积存金 今日金价"
@@ -361,7 +368,7 @@ Trade-Accumulated-Gold-CN/
 
 ### 调整交易节奏
 
-`SKILL.md` 顶部的核心定位部分可调整：
+`.claude/skills/SKILL.md` 顶部的核心定位部分可调整：
 
 ```markdown
 - **交易节奏**: 小时/天级别短线，快进快出    ← 改为"日/周级别"可切换到中线分析
@@ -383,7 +390,7 @@ R:R = (目标收益) ÷ (止损距离) ≥ 1.5:1    ← 改为 2:1 更保守
 L站佬友链接：https://linux.do/
 
 1. **京东金融金友圈博主** — 黄金小小斌（博主信息观点每日聚合，方便寻找共识）、兰宫花匠（积存金点位分析方法论）
-2. **技术指标优化** — 在 `references/technical-analysis.md` 中补充
+2. **技术指标优化** — 在 `.claude/skills/references/technical-analysis.md` 中补充
 3. **实战案例** — 分享你用本工具做出的成功/失败交易案例
 4. **Bug 反馈** — 如遇到换算错误或点位明显偏差，欢迎提 Issue
 
