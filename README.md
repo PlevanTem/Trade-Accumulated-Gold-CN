@@ -422,12 +422,14 @@ MIT License — 自由使用、修改、分发，保留原始版权声明即可�
 
 你的 Star 是持续更新和优化的最大动力 🙏
 
-[<a href="https://www.star-history.com/?repos=PlevanTem%2FTrade-Accumulated-Gold-CN&type=date&legend=top-left">
+## Star History
+
+<a href="https://www.star-history.com/?repos=PlevanTem%2FTrade-Accumulated-Gold-CN&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&theme=dark&legend=top-left&sealed_token=gQGGWEietgIFhpeGR0xkn9wDjPzc-byjquLQ0a1TAWFylvDvkr29qaL28E-VzgKh-KohuDROIq7Fk8j4aJyP5sMnJBCdr2B0RnYsn5_3-Cni-eVSBN4u7_RMMm8EGY-0wjT3vrRuhXeFuyvUwbdDE1GrfaL-KKmq_c9kh0bdyAbC9xkoB9Y-5g7acSeU" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left&sealed_token=gQGGWEietgIFhpeGR0xkn9wDjPzc-byjquLQ0a1TAWFylvDvkr29qaL28E-VzgKh-KohuDROIq7Fk8j4aJyP5sMnJBCdr2B0RnYsn5_3-Cni-eVSBN4u7_RMMm8EGY-0wjT3vrRuhXeFuyvUwbdDE1GrfaL-KKmq_c9kh0bdyAbC9xkoB9Y-5g7acSeU" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=PlevanTem/Trade-Accumulated-Gold-CN&type=date&legend=top-left&sealed_token=gQGGWEietgIFhpeGR0xkn9wDjPzc-byjquLQ0a1TAWFylvDvkr29qaL28E-VzgKh-KohuDROIq7Fk8j4aJyP5sMnJBCdr2B0RnYsn5_3-Cni-eVSBN4u7_RMMm8EGY-0wjT3vrRuhXeFuyvUwbdDE1GrfaL-KKmq_c9kh0bdyAbC9xkoB9Y-5g7acSeU" />
  </picture>
-</a>](https://www.star-history.com/?repos=PlevanTem%2FTrade-Accumulated-Gold-CN&type=date&legend=top-left)
+</a>
 
 </div>
